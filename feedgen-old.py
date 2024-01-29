@@ -1,41 +1,35 @@
 from selenium import webdriver
-from selenium.webdriver.chrome.options import Options
 from selenium.webdriver.chrome.service import Service
+from webdriver_manager.chrome import ChromeDriverManager
+from selenium.webdriver.common.by import By
 from feedgenerator import Rss201rev2Feed
 import time
 import hashlib
-from pyvirtualdisplay import Display
-import time
+import chromedriver_autoinstaller
+from selenium.webdriver.chrome.options import Options
+from webdriver_manager.chrome import ChromeDriverManager
+from webdriver_manager.core.os_manager import ChromeType
+from selenium.webdriver.chrome.options import Options
+from selenium.webdriver.chrome.service import Service
 
-display = Display(visible=0, size=(800, 800))  
-display.start()
 
-chromedriver_autoinstaller.install()  # Check if the current version of chromedriver exists
-                                      # and if it doesn't exist, download it automatically,
-                                      # then add chromedriver to path
 
-chrome_options = webdriver.ChromeOptions()    
-# Add your options as needed    
+chrome_service = Service(ChromeDriverManager(chrome_type=ChromeType.CHROMIUM).install())
+
+chrome_options = Options()
 options = [
-  # Define window size here
-   "--window-size=1200,1200",
-    "--ignore-certificate-errors",
- 
     "--headless",
     "--disable-gpu",
-    #"--window-size=1920,1200",
-    "--ignore-certificate-errors"
-    #"--disable-extensions",
-    #"--no-sandbox",
-    #"--disable-dev-shm-usage",
-    #'--remote-debugging-port=9222'
+    "--window-size=1920,1200",
+    "--ignore-certificate-errors",
+    "--disable-extensions",
+    "--no-sandbox",
+    "--disable-dev-shm-usage"
 ]
-
 for option in options:
     chrome_options.add_argument(option)
 
-    
-driver = webdriver.Chrome(options = chrome_options)
+driver = webdriver.Chrome(service=chrome_service, options=chrome_options)
 
 
 # Create a new RSS feed
