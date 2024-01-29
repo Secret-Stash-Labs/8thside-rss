@@ -62,12 +62,12 @@ try:
                 # Construct the HTML formatted message
                 formatted_message = f"<h2>{event_details['Event Name']}</h2>"
                 formatted_message += f"<p><strong>Date and Time:</strong> {event_datetime}</p>"
-                # formatted_message += "<ul>"
-                # for key, value in event_details.items():
-                #     if key not in ["Day of Week", "Month", "Day", "Event Time"]:  # Exclude individual date and time parts
-                #         formatted_message += f"<li><strong>{key}</strong>: {value}</li>"
-                # formatted_message += "</ul>"
-                
+                formatted_message += "<ul>"
+                for key, value in event_details.items():
+                    if key not in ["Event Name", "Day of Week", "Month", "Day", "Event Time"]:  # Exclude 'Event Name' and individual date/time parts
+                        formatted_message += f"<li><strong>{key}</strong>: {value}</li>"
+                formatted_message += "</ul>"
+                        
 
         # Add the event details to the RSS feed
         try:
