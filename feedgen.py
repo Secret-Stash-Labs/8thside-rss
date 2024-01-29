@@ -51,18 +51,24 @@ try:
             elif class_name == "dayOfMonth text-center":
                 event_details["Day"] = text
                 
-            guid = hashlib.md5(''.join(event_details.values()).encode()).hexdigest()
+            # Ensure all necessary details are present before generating the GUID
+            if all(key in event_details for key in ["Event Name", "Event Cost", "Event Time", "Day of Week", "Month", "Day"]):
+                # Use a consistent order for concatenation
+                details_str = f"{event_details['Event Name']}-{event_details['Event Cost']}-{event_details['Event Time']}-{event_details['Day of Week']}-{event_details['Month']}-{event_details['Day']}"
+                guid = hashlib.md5(details_str.encode()).hexdigest()
             
 
         # Add the event details to the RSS feed
-        feed.add_item(
-            title=event_details.get("Event Name", ""),
-            link="https://locator.wizards.com/store/14936",
-            description=str(event_details),
-            content=str(event_details),
-            id=guid,
-            guid=guid
-        )
+        try:
+            feed.add_item(
+                title=event_details.get("Event Name", ""),
+                link="https://locator.wizards.com/store/14936",
+                description=str(event_details),
+                content=str(event_details),
+                unique_id=guid  # Set the unique ID
+            )
+        except:
+            pass
         
         
 
