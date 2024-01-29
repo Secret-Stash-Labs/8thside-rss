@@ -52,13 +52,14 @@ try:
                 event_details["Day"] = text
                 
             guid = hashlib.md5(''.join(event_details.values()).encode()).hexdigest()
-            event_details["Guid"] = guid
+            
 
         # Add the event details to the RSS feed
         feed.add_item(
             title=event_details.get("Event Name", ""),
             link="https://locator.wizards.com/store/14936",
             description=str(event_details),
+            id=guid
         )
         
         
