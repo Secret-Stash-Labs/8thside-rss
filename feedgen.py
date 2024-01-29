@@ -59,7 +59,9 @@ try:
             title=event_details.get("Event Name", ""),
             link="https://locator.wizards.com/store/14936",
             description=str(event_details),
-            id=guid
+            content=str(event_details),
+            id=guid,
+            guid=guid
         )
         
         
