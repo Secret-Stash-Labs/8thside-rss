@@ -25,10 +25,8 @@ jobs:
       - name: Running the Python script
         run: python feedgen.py
         
-      - name: Commit and Push The Results From Python Selenium Action
-        run: |
-         git config --global user.name "dev7117"
-         git config --global user.email "zdevore@gmail.com"
-         git add -A
-         git commit -m "GitHub Actions Results added"
-         git push
+      - name: Push changes
+        uses: ad-m/github-push-action@master
+        with:
+          github_token: ${{ secrets.PUSHPAT }}
+          branch: main
