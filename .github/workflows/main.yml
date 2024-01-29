@@ -42,3 +42,6 @@ jobs:
         uses: ad-m/github-push-action@master
         with:
           github_token: ${{ secrets.PUSHPAT2 }}
+      
+      - name: Running the Python script
+        run: npm run deploy
