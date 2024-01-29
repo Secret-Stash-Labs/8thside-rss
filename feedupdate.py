@@ -3,18 +3,15 @@ from selenium.webdriver.chrome.service import Service
 from webdriver_manager.chrome import ChromeDriverManager
 from selenium.webdriver.common.by import By
 from feedgenerator import Rss201rev2Feed
+import feedparser
 import time
 
 # Set up the WebDriver
 service = Service(ChromeDriverManager().install())
 driver = webdriver.Chrome(service=service)
 
-# Create a new RSS feed
-feed = Rss201rev2Feed(
-    title="Event Feed",
-    link="https://locator.wizards.com/store/14936",
-    description="Feed of events",
-)
+# Open Existing RSS feed
+feed = feedparser.parse('feed.rss')
 
 try:
     # Navigate to the URL
@@ -57,10 +54,12 @@ try:
             link="https://locator.wizards.com/store/14936",
             description=str(event_details),
         )
+        
+        
 
 finally:
     driver.quit()
 
-# Write the RSS feed to a file
+# Write the RSS feed to a file 
 with open('feed.rss', 'w') as f:
     feed.write(f, 'utf-8')
