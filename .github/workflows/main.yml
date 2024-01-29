@@ -1,7 +1,9 @@
+name: Run Python Script
+
 on:
   schedule:
     - cron: '*/15 * * * *'
-  workflow_dispatch: 
+  workflow_dispatch:
 
 jobs:
   run-script:
@@ -9,11 +11,26 @@ jobs:
     steps:
     - name: Checkout repository
       uses: actions/checkout@v2
-      
+
     - name: Set up Python
       uses: actions/setup-python@v2
       with:
-        python-version: '3.11'  # Specify your Python version
+        python-version: '3.11'
+
+    - name: Install Chrome
+      run: |
+        sudo apt-get update
+        sudo apt-get install -y google-chrome-stable
+
+    - name: Install ChromeDriver
+      run: |
+        CHROME_VERSION=$(google-chrome --version | cut -d ' ' -f 3 | cut -d '.' -f 1)
+        CHROMEDRIVER_VERSION=$(curl -s "https://chromedriver.storage.googleapis.com/LATEST_RELEASE_$CHROME_VERSION")
+        wget -N "https://chromedriver.storage.googleapis.com/$CHROMEDRIVER_VERSION/chromedriver_linux64.zip" -P ~/
+        unzip ~/chromedriver_linux64.zip -d ~/
+        sudo mv -f ~/chromedriver /usr/local/bin/chromedriver
+        sudo chown root:root /usr/local/bin/chromedriver
+        sudo chmod 0755 /usr/local/bin/chromedriver
 
     - name: Install dependencies
       run: |
@@ -21,4 +38,4 @@ jobs:
         if [ -f requirements.txt ]; then pip install -r requirements.txt; fi
 
     - name: Run the script
-      run: python feedgen.py  # Replace with your script name
+      run: python feedgen.py
