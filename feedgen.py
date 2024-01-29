@@ -5,6 +5,11 @@ from selenium.webdriver.common.by import By
 from feedgenerator import Rss201rev2Feed
 import time
 import hashlib
+import chromedriver_autoinstaller
+from selenium.webdriver.chrome.options import Options
+
+chromedriver_autoinstaller.install()
+
 # Set up the WebDriver
 service = Service(ChromeDriverManager().install())
 driver = webdriver.Chrome(service=service)
