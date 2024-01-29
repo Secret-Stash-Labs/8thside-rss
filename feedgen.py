@@ -53,14 +53,19 @@ try:
                 
             # Ensure all necessary details are present before generating the GUID
             if all(key in event_details for key in ["Event Name", "Event Cost", "Event Time", "Day of Week", "Month", "Day"]):
-                # Use a consistent order for concatenation
-                details_str = f"{event_details['Event Name']}-{event_details['Event Cost']}-{event_details['Event Time']}-{event_details['Day of Week']}-{event_details['Month']}-{event_details['Day']}"
+                event_datetime = f"{event_details['Day of Week']}, {event_details['Month']} {event_details['Day']}, {event_details['Event Time']}"
+
+                # Create a consistent string for GUID generation
+                details_str = f"{event_details['Event Name']}-{event_details['Event Cost']}-{event_datetime}"
                 guid = hashlib.md5(details_str.encode()).hexdigest()
-                
+
+                # Construct the HTML formatted message
                 formatted_message = f"<h2>{event_details['Event Name']}</h2>"
+                formatted_message += f"<p><strong>Date and Time:</strong> {event_datetime}</p>"
                 formatted_message += "<ul>"
                 for key, value in event_details.items():
-                    formatted_message += f"<li><strong>{key}</strong>: {value}</li>"
+                    if key not in ["Day of Week", "Month", "Day", "Event Time"]:  # Exclude individual date and time parts
+                        formatted_message += f"<li><strong>{key}</strong>: {value}</li>"
                 formatted_message += "</ul>"
                 
 
