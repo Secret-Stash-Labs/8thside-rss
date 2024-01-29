@@ -22,6 +22,9 @@ jobs:
       - name: Install xvfb
         run: sudo apt-get install xvfb
 
+      - name: Remove old feed.rss file
+        run: rm -f feed.rss
+
       - name: Running the Python script
         run: python feedgen.py
         
@@ -29,5 +32,6 @@ jobs:
         run: |
           git config --global user.name 'Dev7117'
           git config --global user.email 'Dev7117@users.noreply.github.com'
+          git add .
           git commit -am "Automated Commit"
           git push
