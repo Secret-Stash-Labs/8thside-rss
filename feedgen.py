@@ -56,14 +56,20 @@ try:
                 # Use a consistent order for concatenation
                 details_str = f"{event_details['Event Name']}-{event_details['Event Cost']}-{event_details['Event Time']}-{event_details['Day of Week']}-{event_details['Month']}-{event_details['Day']}"
                 guid = hashlib.md5(details_str.encode()).hexdigest()
-            
+                
+                formatted_message = f"<h2>{event_details['Event Name']}</h2>"
+                formatted_message += "<ul>"
+                for key, value in event_details.items():
+                    formatted_message += f"<li><strong>{key}</strong>: {value}</li>"
+                formatted_message += "</ul>"
+                
 
         # Add the event details to the RSS feed
         try:
             feed.add_item(
                 title=event_details.get("Event Name", ""),
                 link="https://locator.wizards.com/store/14936",
-                description=str(event_details),
+                description=formatted_message,
                 content=str(event_details),
                 unique_id=guid  # Set the unique ID
             )
