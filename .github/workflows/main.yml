@@ -8,9 +8,6 @@ on:
 jobs:
   run-script:
     runs-on: ubuntu-latest
-    container: 
-      image: selenium/standalone-chrome:latest  # Use a Docker image with Chrome and ChromeDriver
-
     steps:
     - name: Check out this repo
       uses: actions/checkout@v2
