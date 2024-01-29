@@ -6,6 +6,7 @@ import time
 import hashlib
 from pyvirtualdisplay import Display
 import time
+import chromedriver_autoinstaller
 
 display = Display(visible=0, size=(800, 800))  
 display.start()
