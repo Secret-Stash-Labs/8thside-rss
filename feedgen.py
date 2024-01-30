@@ -87,7 +87,7 @@ try:
                 event_datetime = f"{event_details['Day of Week']}, {event_details['Month']} {event_details['Day']}, {event_details['Event Time']}"
 
                 # Create a consistent string for GUID generation
-                details_str = f"{event_details['Event Name']}-{event_datetime}"
+                details_str = f"{event_details['Event Name']}-{event_details['Event Cost']}-{event_datetime}"
                 guid = hashlib.md5(details_str.encode()).hexdigest()
 
                 # Construct the HTML formatted message
