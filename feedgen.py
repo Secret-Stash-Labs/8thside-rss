@@ -88,6 +88,7 @@ try:
             # Ensure all necessary details are present before generating the GUID
             if all(key in event_details for key in ["Event Name", "Event Cost", "Event Time", "Day of Week", "Month", "Day"]):
                 event_datetime_str = f"{event_details['Day of Week']}, {event_details['Month']} {event_details['Day']}, {event_details['Event Time']}"
+                print(event_datetime_str)
                 event_datetime = datetime.strptime(event_datetime_str, "%A, %B %d, %I:%M %p")
                 event_datetime = event_datetime - timedelta(hours=5)
                 
