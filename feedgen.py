@@ -90,9 +90,10 @@ try:
                 event_datetime_str = f"{event_details['Day of Week']}, {event_details['Month']} {event_details['Day']}, 2024 , {event_details['Event Time']}"
                 event_datetime = datetime.strptime(event_datetime_str, "%A, %B %d, %Y , %I:%M %p")
                 event_datetime = event_datetime - timedelta(hours=5)
+                event_datetime_str = event_datetime.strftime("%A, %B %d, %I:%M %p") 
                 
                 # Create a consistent string for GUID generation
-                details_str = f"{event_details['Event Name']}-{event_details['Event Cost']}-{event_datetime}"
+                details_str = f"{event_details['Event Name']}-{event_details['Event Cost']}-{event_datetime_str}"
                 guid = hashlib.md5(details_str.encode()).hexdigest()
 
                 # Construct the HTML formatted message
