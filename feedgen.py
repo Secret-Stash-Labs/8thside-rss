@@ -8,6 +8,8 @@ from pyvirtualdisplay import Display
 import time
 import chromedriver_autoinstaller
 from selenium.webdriver.common.by import By
+from datetime import datetime, timedelta
+
 
 display = Display(visible=0, size=(800, 800))  
 display.start()
@@ -72,7 +74,9 @@ try:
             elif class_name == "event-fee":
                 event_details["Event Cost"] = text
             elif class_name == "event-time":
-                event_details["Event Time"] = text
+                event_time = datetime.strptime(text, "%I:%M%p")  # Adjust the format if necessary
+                adjusted_time = (event_time - timedelta(hours=5)).time()
+                event_details["Event Time"] = adjusted_time.strftime("%I:%M%p")
             elif class_name == "row no-gutters":
                 event_details["Event Name"] = text
             elif class_name == "dayOfWeek text-center":
@@ -103,6 +107,7 @@ try:
 
         # Add the event details to the RSS feed
         try:
+            print(event_details.get("Event Name", ""),)
             feed.add_item(
                 title=event_details.get("Event Name", ""),
                 link="https://locator.wizards.com/store/14936",
@@ -111,9 +116,7 @@ try:
                 unique_id=guid  # Set the unique ID
             )
         except:
-            pass
-        
-        
+            pass     
 
 finally:
     driver.quit()
