@@ -87,20 +87,8 @@ try:
                 
             # Ensure all necessary details are present before generating the GUID
             if all(key in event_details for key in ["Event Name", "Event Cost", "Event Time", "Day of Week", "Month", "Day"]):
-                event_datetime_str = f"{event_details['Day of Week']}, {event_details['Month']} {event_details['Day']}, {event_details['Event Time']}"
-                print(event_datetime_str)
-
-                try:
-                    event_datetime = datetime.strptime(event_datetime_str, "%A, %B %d, %I:%M %p")
-                except ValueError:
-                    # Handle February 29th for leap years
-                    if event_details['Month'].lower() == 'february' and event_details['Day'] == '29':
-                        # Use a leap year for the conversion
-                        event_datetime_str = f"Monday, February 29, {event_details['Event Time']}"
-                        event_datetime = datetime.strptime(event_datetime_str, "%A, %B %d, %I:%M %p")
-                    else:
-                        raise
-
+                event_datetime_str = f"{event_details['Day of Week']}, {event_details['Month']} {event_details['Day']}, 2024 , {event_details['Event Time']}"
+                event_datetime = datetime.strptime(event_datetime_str, "%A, %B %d, %Y , %I:%M %p")
                 event_datetime = event_datetime - timedelta(hours=5)
                 
                 # Create a consistent string for GUID generation

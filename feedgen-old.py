@@ -14,7 +14,7 @@ from selenium.webdriver.chrome.service import Service
 
 
 
-chrome_service = Service(ChromeDriverManager(chrome_type=ChromeType.CHROMIUM).install())
+chrome_service = Service(ChromeDriverManager(chrome_type=ChromeType.GOOGLE).install())
 
 chrome_options = Options()
 options = [
@@ -58,6 +58,7 @@ try:
             # Get class name of each child element
             class_name = element.get_attribute('class')
             text = element.text
+            print(text)
 
             if class_name == "store-info__name":
                 event_details["Store Name"] = text
@@ -73,6 +74,7 @@ try:
                 event_details["Month"] = text
             elif class_name == "dayOfMonth text-center":
                 event_details["Day"] = text
+            
                 
             # Ensure all necessary details are present before generating the GUID
             if all(key in event_details for key in ["Event Name", "Event Cost", "Event Time", "Day of Week", "Month", "Day"]):
@@ -111,5 +113,5 @@ finally:
     driver.quit()
 
 # Write the RSS feed to a file 
-with open('feed.rss', 'w') as f:
-    feed.write(f, 'utf-8')
+# with open('feed.rss', 'w') as f:
+#     feed.write(f, 'utf-8')
