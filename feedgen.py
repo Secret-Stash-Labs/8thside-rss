@@ -8,6 +8,7 @@ from pyvirtualdisplay import Display
 import time
 import chromedriver_autoinstaller
 from selenium.webdriver.common.by import By
+from datetime import timedelta
 
 display = Display(visible=0, size=(800, 800))  
 display.start()
@@ -85,7 +86,8 @@ try:
             # Ensure all necessary details are present before generating the GUID
             if all(key in event_details for key in ["Event Name", "Event Cost", "Event Time", "Day of Week", "Month", "Day"]):
                 event_datetime = f"{event_details['Day of Week']}, {event_details['Month']} {event_details['Day']}, {event_details['Event Time']}"
-
+                event_datetime = event_datetime - timedelta(hours=5)
+                
                 # Create a consistent string for GUID generation
                 details_str = f"{event_details['Event Name']}-{event_details['Event Cost']}-{event_datetime}"
                 guid = hashlib.md5(details_str.encode()).hexdigest()
