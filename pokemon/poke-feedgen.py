@@ -26,6 +26,11 @@ from webdriver_manager.core.os_manager import ChromeType
 from selenium.webdriver.chrome.options import Options
 from selenium.webdriver.chrome.service import Service
 import re
+from selenium.webdriver.common.by import By
+from selenium.webdriver.common.action_chains import ActionChains
+from selenium.webdriver.support.ui import WebDriverWait
+from selenium.webdriver.support import expected_conditions as EC
+
 
 
 
@@ -135,6 +140,23 @@ try:
             # Re-find the event cards after navigating back to the event list page
             event_cards = driver.find_elements(By.CLASS_NAME, 'event-card')
             time.sleep(5)
+            
+            # Inside your for loop, after getting the event details
+            event_title = lineSplit[0]
+            event_date = lineSplit[2]
+            event_link = eventUrl
+            event_price = dollar_values[0]
+
+            # Create a new item with these details
+            item = {
+                'title': event_title,
+                'link': event_link,
+                'description': f'Date: {event_date}, Price: {event_price}',
+            }
+
+            # Add the item to the feed
+            feed.add_item(**item)
+            
 except:
     pass
 
