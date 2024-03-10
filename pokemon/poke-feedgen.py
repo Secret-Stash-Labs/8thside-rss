@@ -155,7 +155,7 @@ try:
             item = {
                 'title': event_title,
                 'link': event_link,
-                'description': f'{event_title}\nDate: {event_date}\n Price: {event_price}\nLink: {event_link}\n\n',
+                'description': f'{event_title}\nDate: {event_date}\nPrice: {event_price}\nLink: {event_link}\n\n',
             }
 
             # Add the item to the feed
