@@ -114,12 +114,28 @@ try:
             # Re-find the event cards after navigating back to the event list page
             event_cards = driver.find_elements(By.CLASS_NAME, 'event-card')
             time.sleep(5)
+            
+            # Inside your for loop, after getting the event details
+            event_title = lineSplit[0]
+            event_date = lineSplit[2]
+            event_link = eventUrl
+            event_price = dollar_values[0]
+
+            # Create a new item with these details
+            item = {
+                'title': event_title,
+                'link': event_link,
+                'description': f'Date: {event_date}, Price: {event_price}',
+            }
+
+            # Add the item to the feed
+            feed.add_item(**item)
+            
 except:
     pass
 
 finally:
     driver.quit()
 
-# Write the RSS feed to a file 
-# with open('feed.rss', 'w') as f:
-#     feed.write(f, 'utf-8')
+with open('pokefeed.rss', 'w') as f:
+    feed.write(f, 'utf-8')
