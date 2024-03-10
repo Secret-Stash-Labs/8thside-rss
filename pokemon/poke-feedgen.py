@@ -72,6 +72,28 @@ try:
     # Navigate to the URL
     driver.get("https://events.pokemon.com/en-us/events?near=4232%20Fort%20St,%20Lincoln%20Park,%20MI%2048146,%20USA")
     # Wait for the event cards to load
+    
+    time.sleep(5)
+    
+    # Initialize last_height
+    last_height = driver.execute_script("return document.body.scrollHeight")
+
+    
+    while True:
+        # Scroll down to bottom
+        driver.execute_script("window.scrollTo(0, document.body.scrollHeight);")
+
+        # Wait to load page
+        time.sleep(2)
+
+        # Calculate new scroll height and compare with last scroll height
+        new_height = driver.execute_script("return document.body.scrollHeight")
+
+        # break condition: if the page height remains the same after scrolling, we can break the loop
+        if new_height == last_height:
+            break
+        last_height = new_height
+    
     WebDriverWait(driver, 10).until(EC.presence_of_all_elements_located((By.CLASS_NAME, 'event-card')))
 
 
@@ -85,11 +107,15 @@ try:
         if "8th" in event_cards[i].text.lower():
             lineSplit = event_cards[i].text.splitlines()
             
-            eventDate = lineSplit[0] # date
-            eventName = lineSplit[2] # event name
+            print(lineSplit[0])
+            print(lineSplit[2])
 
             # Click on the event card to navigate to the event page
-            event_cards[i].click()
+            # Scroll to the element
+            driver.execute_script("arguments[0].scrollIntoView();", event_cards[i])
+
+            # Click the element
+            ActionChains(driver).move_to_element(event_cards[i]).click(event_cards[i]).perform()
             eventUrl = driver.current_url
             print(eventUrl)
 
@@ -99,36 +125,18 @@ try:
             source = driver.page_source
 
             dollar_values = re.findall(r'\$\d+(?:\.\d{2})?', source)
-            dollarValue = dollar_values[0]
 
             # Print the found dollar values
-            # print(dollar_values[0])
+            print(dollar_values[0])
 
             driver.back()
             time.sleep(5)
             
-            formatted_message = f"<p></p>"  # Empty paragraph for spacing
-            formatted_message += f"<p><h2>{eventName}</h2></p>"
-            formatted_message += f"<p><strong>Date and Time:</strong> {eventDate}</p>"
-            formatted_message += f"<p><strong>Event Details:</strong> {eventUrl}</p>"
-            formatted_message += f"<p><strong>Event Details:</strong> {dollarValue}</p>"
-            formatted_message += "<p><ul>"
-            
-            details_str = f"{eventDate}-{eventName}-{dollarValue}"
-            guid = hashlib.md5(details_str.encode()).hexdigest()
-
-            
-            try:
-                # print(event_details.get("Event Name", ""),)
-                feed.add_item(
-                    title=lineSplit[2],
-                    link=eventUrl,
-                    content=formatted_message,
-                    description=formatted_message,
-                    unique_id=guid  # Set the unique ID
-                )
-            except:
-                pass
+            # Re-find the event cards after navigating back to the event list page
+            event_cards = driver.find_elements(By.CLASS_NAME, 'event-card')
+            time.sleep(5)
+except:
+    pass
 
 finally:
     driver.quit()
