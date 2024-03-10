@@ -112,8 +112,8 @@ try:
         if "8th" in event_cards[i].text.lower():
             lineSplit = event_cards[i].text.splitlines()
             
-            print(lineSplit[0])
-            print(lineSplit[2])
+            # print(lineSplit[0])
+            # print(lineSplit[2])
 
             # Click on the event card to navigate to the event page
             # Scroll to the element
@@ -122,7 +122,7 @@ try:
             # Click the element
             ActionChains(driver).move_to_element(event_cards[i]).click(event_cards[i]).perform()
             eventUrl = driver.current_url
-            print(eventUrl)
+            # print(eventUrl)
 
             # Wait for the new page to load
             time.sleep(5)  # adjust this value as needed
@@ -132,7 +132,7 @@ try:
             dollar_values = re.findall(r'\$\d+(?:\.\d{2})?', source)
 
             # Print the found dollar values
-            print(dollar_values[0])
+            # print(dollar_values[0])
 
             driver.back()
             time.sleep(5)
@@ -142,16 +142,20 @@ try:
             time.sleep(5)
             
             # Inside your for loop, after getting the event details
-            event_title = lineSplit[0]
-            event_date = lineSplit[2]
+            event_title = lineSplit[2]
+            print(event_title)
+            event_date = lineSplit[0]
+            print(event_date)
             event_link = eventUrl
+            print(event_link)
             event_price = dollar_values[0]
+            print(event_price)
 
             # Create a new item with these details
             item = {
                 'title': event_title,
                 'link': event_link,
-                'description': f'Date: {event_date}, Price: {event_price}',
+                'description': f'{event_title}\nDate: {event_date}\n Price: {event_price}\nLink: {event_link}\n\n',
             }
 
             # Add the item to the feed
