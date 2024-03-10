@@ -29,9 +29,15 @@ jobs:
 
       - name: Remove old feed.rss file
         run: rm -f feed.rss
+      
+      - name: Remove old poke feed.rss file
+        run: rm -f pokemon/feed.rss
 
       - name: Running the Python script
         run: python feedgen.py
+
+      - name: Running the Pokemon Python script
+        run: python pokemon/poke-feedgen.py
         
       - name: Commit Changes
         run: |
