@@ -1,18 +1,13 @@
 <?xml version="1.0" encoding="utf-8"?>
-<rss version="2.0"><channel><title>Event Feed</title><link>https://events.pokemon.com/en-us/events?near=4232%20Fort%20St,%20Lincoln%20Park,%20MI%2048146,%20USA</link><description>Feed of events</description><lastBuildDate>Sun, 31 Mar 2024 05:07:05 -0000</lastBuildDate><item><title>8th Side Pokémon League</title><link>https://events.pokemon.com/en-us/tournaments/a9dc6f9d-6f61-43b9-9fcf-9c7a32f7159a</link><description>8th Side Pokémon League
-Date: April 23, 2024 6:30PM
-Price: $5
-Link: https://events.pokemon.com/en-us/tournaments/a9dc6f9d-6f61-43b9-9fcf-9c7a32f7159a
-
-</description></item><item><title>8th Side Pokémon League</title><link>https://events.pokemon.com/en-us/tournaments/5ab5a376-399e-41fc-830c-03acec1fb619</link><description>8th Side Pokémon League
+<rss version="2.0"><channel><title>Event Feed</title><link>https://events.pokemon.com/en-us/events?near=4232%20Fort%20St,%20Lincoln%20Park,%20MI%2048146,%20USA</link><description>Feed of events</description><lastBuildDate>Sun, 31 Mar 2024 05:24:02 -0000</lastBuildDate><item><title>8th Side Pokémon League</title><link>https://events.pokemon.com/en-us/tournaments/5ab5a376-399e-41fc-830c-03acec1fb619</link><description>8th Side Pokémon League
 Date: April 30, 2024 6:30PM
 Price: $5
 Link: https://events.pokemon.com/en-us/tournaments/5ab5a376-399e-41fc-830c-03acec1fb619
 
-</description></item><item><title>8th Side Pokémon League</title><link>https://events.pokemon.com/en-us/tournaments/d929282c-b21c-4cb0-8655-5becafcdfdac</link><description>8th Side Pokémon League
-Date: May 07, 2024 6:30PM
+</description></item><item><title>8th Side Pokémon League</title><link>https://events.pokemon.com/en-us/tournaments/a9dc6f9d-6f61-43b9-9fcf-9c7a32f7159a</link><description>8th Side Pokémon League
+Date: April 23, 2024 6:30PM
 Price: $5
-Link: https://events.pokemon.com/en-us/tournaments/d929282c-b21c-4cb0-8655-5becafcdfdac
+Link: https://events.pokemon.com/en-us/tournaments/a9dc6f9d-6f61-43b9-9fcf-9c7a32f7159a
 
 </description></item><item><title>8th Side Pokémon League</title><link>https://events.pokemon.com/en-us/tournaments/56527321-a24e-4c7a-8e88-636ee4eaad10</link><description>8th Side Pokémon League
 Date: April 09, 2024 6:30PM
@@ -43,5 +38,10 @@ Link: https://events.pokemon.com/en-us/tournaments/e147ad8d-e9e1-43c2-b429-8519a
 Date: May 28, 2024 6:30PM
 Price: $5
 Link: https://events.pokemon.com/en-us/tournaments/cf7af2d6-f023-4ad0-b793-cf458a4e31c9
+
+</description></item><item><title>8th Side Pokémon League</title><link>https://events.pokemon.com/en-us/tournaments/d929282c-b21c-4cb0-8655-5becafcdfdac</link><description>8th Side Pokémon League
+Date: May 07, 2024 6:30PM
+Price: $5
+Link: https://events.pokemon.com/en-us/tournaments/d929282c-b21c-4cb0-8655-5becafcdfdac
 
 </description></item></channel></rss>
