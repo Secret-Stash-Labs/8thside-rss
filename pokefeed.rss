@@ -1,17 +1,12 @@
 <?xml version="1.0" encoding="utf-8"?>
-<rss version="2.0"><channel><title>Event Feed</title><link>https://events.pokemon.com/en-us/events?near=4232%20Fort%20St,%20Lincoln%20Park,%20MI%2048146,%20USA</link><description>Feed of events</description><lastBuildDate>Sun, 07 Apr 2024 00:15:06 -0000</lastBuildDate><item><title>8th Side Pokémon TCG League Cup</title><link>https://events.pokemon.com/en-us/tournaments/ddeee207-4a08-41e2-b213-8983fef9aa9c</link><description>8th Side Pokémon TCG League Cup
-Date: April 20, 2024 2:00PM
-Price: $20
-Link: https://events.pokemon.com/en-us/tournaments/ddeee207-4a08-41e2-b213-8983fef9aa9c
-
-</description></item><item><title>8th Side Pokémon League</title><link>https://events.pokemon.com/en-us/tournaments/5ab5a376-399e-41fc-830c-03acec1fb619</link><description>8th Side Pokémon League
-Date: April 30, 2024 6:30PM
-Price: $5
-Link: https://events.pokemon.com/en-us/tournaments/5ab5a376-399e-41fc-830c-03acec1fb619
-
-</description></item><item><title>8th Side Pokémon League</title><link>https://events.pokemon.com/en-us/tournaments/a9dc6f9d-6f61-43b9-9fcf-9c7a32f7159a</link><description>8th Side Pokémon League
+<rss version="2.0"><channel><title>Event Feed</title><link>https://events.pokemon.com/en-us/events?near=4232%20Fort%20St,%20Lincoln%20Park,%20MI%2048146,%20USA</link><description>Feed of events</description><lastBuildDate>Sun, 07 Apr 2024 00:32:37 -0000</lastBuildDate><item><title>8th Side Pokémon League</title><link>https://events.pokemon.com/en-us/tournaments/a9dc6f9d-6f61-43b9-9fcf-9c7a32f7159a</link><description>8th Side Pokémon League
 Date: April 23, 2024 6:30PM
 Price: $5
 Link: https://events.pokemon.com/en-us/tournaments/a9dc6f9d-6f61-43b9-9fcf-9c7a32f7159a
+
+</description></item><item><title>8th Side Pokémon TCG League Cup</title><link>https://events.pokemon.com/en-us/tournaments/ddeee207-4a08-41e2-b213-8983fef9aa9c</link><description>8th Side Pokémon TCG League Cup
+Date: April 20, 2024 2:00PM
+Price: $20
+Link: https://events.pokemon.com/en-us/tournaments/ddeee207-4a08-41e2-b213-8983fef9aa9c
 
 </description></item></channel></rss>
