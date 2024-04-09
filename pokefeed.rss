@@ -1,2 +1,12 @@
 <?xml version="1.0" encoding="utf-8"?>
-<rss version="2.0"><channel><title>Event Feed</title><link>https://events.pokemon.com/en-us/events?near=4232%20Fort%20St,%20Lincoln%20Park,%20MI%2048146,%20USA</link><description>Feed of events</description><lastBuildDate>Tue, 09 Apr 2024 03:34:01 -0000</lastBuildDate></channel></rss>
+<rss version="2.0"><channel><title>Event Feed</title><link>https://events.pokemon.com/en-us/events?near=4232%20Fort%20St,%20Lincoln%20Park,%20MI%2048146,%20USA</link><description>Feed of events</description><lastBuildDate>Tue, 09 Apr 2024 03:48:57 -0000</lastBuildDate><item><title>8th Side Pokémon League</title><link>https://events.pokemon.com/en-us/tournaments/18fabb1b-1bf0-4962-b2ad-505069954a89</link><description>8th Side Pokémon League
+Date: June 04, 2024 6:30PM
+Price: $5
+Link: https://events.pokemon.com/en-us/tournaments/18fabb1b-1bf0-4962-b2ad-505069954a89
+
+</description></item><item><title>8th Side Pokémon TCG League Cup</title><link>https://events.pokemon.com/en-us/tournaments/ddeee207-4a08-41e2-b213-8983fef9aa9c</link><description>8th Side Pokémon TCG League Cup
+Date: April 20, 2024 2:00PM
+Price: $20
+Link: https://events.pokemon.com/en-us/tournaments/ddeee207-4a08-41e2-b213-8983fef9aa9c
+
+</description></item></channel></rss>
