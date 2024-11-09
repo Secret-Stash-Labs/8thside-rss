@@ -89,7 +89,7 @@ try:
             if all(key in event_details for key in ["Event Name", "Event Cost", "Event Time", "Day of Week", "Month", "Day"]):
                 event_datetime_str = f"{event_details['Day of Week']}, {event_details['Month']} {event_details['Day']}, 2024 , {event_details['Event Time']}"
                 event_datetime = datetime.strptime(event_datetime_str, "%A, %B %d, %Y , %I:%M %p")
-                event_datetime = event_datetime - timedelta(hours=4)
+                event_datetime = event_datetime - timedelta(hours=5)
                 event_datetime_str = datetime.strftime(event_datetime,"%A, %B %d, %I:%M %p") 
                 
                 # Create a consistent string for GUID generation
