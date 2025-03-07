@@ -1,4 +1,4 @@
-name: Run Selenium On GitHub Action
+name: Run Playwright On GitHub Action
 on:
   schedule:
     - cron: '*/15 * * * *'
@@ -18,12 +18,13 @@ jobs:
           python-version: '3.9'
       - name: Installing package list
         run: apt list --installed    
-      - name: Removing previous chrome instances on runner 
-        run: sudo apt purge google-chrome-stable  
-        
-       # Need to fetch reqs if needed
+      
+      # Install Playwright and dependencies
       - name: Installing all necessary packages
-        run: pip install chromedriver-autoinstaller selenium pyvirtualdisplay feedgenerator webdriver_manager
+        run: |
+          pip install playwright beautifulsoup4 feedgenerator requests
+          python -m playwright install chromium
+      
       - name: Install xvfb
         run: sudo apt-get install xvfb
 
@@ -33,8 +34,8 @@ jobs:
       - name: Remove old poke feed.rss file
         run: rm -f pokemon/feed.rss
 
-      - name: Running the Python script
-        run: python feedgen.py
+      - name: Running the Python script with Playwright
+        run: python feedgen-playwright.py
 
       - name: Running the Pokemon Python script
         run: python pokemon/poke-feedgen.py
