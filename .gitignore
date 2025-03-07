@@ -14,7 +14,7 @@ build/
 *.egg-info/
 
 # Generated RSS feed
-feed.rss
+# feed.rss
 
 # Logs
 *.log
