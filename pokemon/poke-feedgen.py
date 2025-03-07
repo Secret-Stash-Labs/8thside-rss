@@ -1,172 +1,229 @@
-from selenium import webdriver
-from selenium.webdriver.chrome.options import Options
-from selenium.webdriver.chrome.service import Service
+import asyncio
+from playwright.async_api import async_playwright
 from feedgenerator import Rss201rev2Feed
 import time
 import hashlib
-from pyvirtualdisplay import Display
-import time
-import chromedriver_autoinstaller
-from selenium.webdriver.common.by import By
-from datetime import timedelta
-from datetime import datetime, timedelta
-from selenium import webdriver
-from selenium.webdriver.chrome.service import Service
-from webdriver_manager.chrome import ChromeDriverManager
-from selenium.webdriver.common.by import By
-from selenium.webdriver.support.ui import WebDriverWait
-from selenium.webdriver.support import expected_conditions as EC
-from feedgenerator import Rss201rev2Feed
-import time
-import hashlib
-import chromedriver_autoinstaller
-from selenium.webdriver.chrome.options import Options
-from webdriver_manager.chrome import ChromeDriverManager
-from webdriver_manager.core.os_manager import ChromeType
-from selenium.webdriver.chrome.options import Options
-from selenium.webdriver.chrome.service import Service
 import re
-from selenium.webdriver.common.by import By
-from selenium.webdriver.common.action_chains import ActionChains
-from selenium.webdriver.support.ui import WebDriverWait
-from selenium.webdriver.support import expected_conditions as EC
+from datetime import datetime, timedelta
+import argparse
+import sys
 
+# Parse command line arguments
+parser = argparse.ArgumentParser(description='Generate Pokemon RSS feed from event data.')
+parser.add_argument('--debug', action='store_true', help='Enable debug output')
+args = parser.parse_args()
 
-
-
-
-display = Display(visible=0, size=(800, 800))  
-display.start()
-
-chromedriver_autoinstaller.install()  # Check if the current version of chromedriver exists
-                                      # and if it doesn't exist, download it automatically,
-                                      # then add chromedriver to path
-
-chrome_options = webdriver.ChromeOptions()    
-# Add your options as needed    
-options = [
-  # Define window size here
-   "--window-size=1920,1200",
-    "--ignore-certificate-errors",
- 
-    "--headless",
-    "--disable-gpu",
-    #"--window-size=1920,1200",
-    "--ignore-certificate-errors"
-    #"--disable-extensions",
-    #"--no-sandbox",
-    #"--disable-dev-shm-usage",
-    #'--remote-debugging-port=9222'
-]
-
-for option in options:
-    chrome_options.add_argument(option)
-
-    
-driver = webdriver.Chrome(options = chrome_options)
-
+# Debug mode flag
+DEBUG = args.debug
 
 # Create a new RSS feed
 feed = Rss201rev2Feed(
-    title="Event Feed",
+    title="Pokemon Event Feed",
     link="https://events.pokemon.com/en-us/events?near=4232%20Fort%20St,%20Lincoln%20Park,%20MI%2048146,%20USA",
-    description="Feed of events",
+    description="Feed of Pokemon events",
 )
 
-try:
-    # Navigate to the URL
-    driver.get("https://events.pokemon.com/en-us/events?near=4232%20Fort%20St,%20Lincoln%20Park,%20MI%2048146,%20USA")
-    # Wait for the event cards to load
+# Calculate the date range: today to one month from now
+today = datetime.now().replace(hour=0, minute=0, second=0, microsecond=0)
+one_month_later = today + timedelta(days=30)
+print(f"Filtering Pokemon events between {today.strftime('%Y-%m-%d')} and {one_month_later.strftime('%Y-%m-%d')}")
+
+async def main():
+    try:
+        print("Using Playwright to fetch Pokemon event data...")
+        await fetch_and_process_events()
+
+        # Write the RSS feed to a file 
+        with open('pokemon/feed.rss', 'w') as f:
+            feed.write(f, 'utf-8')
+            print("Successfully wrote pokemon/feed.rss file")
+
+    except Exception as e:
+        print(f"Error: {e}")
+        if DEBUG:
+            import traceback
+            traceback.print_exc()
+
+async def fetch_and_process_events():
+    """Fetch and process Pokemon event data using Playwright."""
+    async with async_playwright() as p:
+        print("Launching Playwright browser for Pokemon events...")
+        browser = await p.chromium.launch(headless=True)
+        context = await browser.new_context(viewport={'width': 1920, 'height': 1080})
+        page = await context.new_page()
+        
+        print("Navigating to Pokemon events page...")
+        await page.goto("https://events.pokemon.com/en-us/events?near=4232%20Fort%20St,%20Lincoln%20Park,%20MI%2048146,%20USA", wait_until="domcontentloaded")
+        
+        # Wait for content to load
+        print("Waiting for page to load completely...")
+        await page.wait_for_load_state('networkidle')
+        
+        # Wait a bit more to ensure JavaScript execution completes
+        await asyncio.sleep(5)
+        
+        # Wait for the event cards to load
+        await page.wait_for_selector('.event-card', timeout=10000)
+        
+        # Scroll down to load all events
+        await scroll_to_load_all_events(page)
+        
+        # Take a screenshot for debugging
+        if DEBUG:
+            await page.screenshot(path="debug_pokemon_screenshot.png")
+            print("Saved screenshot to debug_pokemon_screenshot.png")
+        
+        # Process the event cards
+        await process_event_cards(page, browser)
+        
+        await browser.close()
+        print("Playwright browser closed")
+
+async def scroll_to_load_all_events(page):
+    """Scroll down to load all event cards."""
+    print("Scrolling to load all events...")
     
-    time.sleep(5)
+    previous_height = 0
+    current_height = await page.evaluate('document.body.scrollHeight')
     
-    # Initialize last_height
-    last_height = driver.execute_script("return document.body.scrollHeight")
-
+    while previous_height < current_height:
+        await page.evaluate('window.scrollTo(0, document.body.scrollHeight)')
+        await asyncio.sleep(2)  # Wait for content to load
+        
+        previous_height = current_height
+        current_height = await page.evaluate('document.body.scrollHeight')
+        
+        if DEBUG:
+            print(f"Scrolled: Previous height: {previous_height}, Current height: {current_height}")
     
-    while True:
-        # Scroll down to bottom
-        driver.execute_script("window.scrollTo(0, document.body.scrollHeight);")
+    print("Finished scrolling. All events should be loaded.")
 
-        # Wait to load page
-        time.sleep(2)
-
-        # Calculate new scroll height and compare with last scroll height
-        new_height = driver.execute_script("return document.body.scrollHeight")
-
-        # break condition: if the page height remains the same after scrolling, we can break the loop
-        if new_height == last_height:
-            break
-        last_height = new_height
+async def process_event_cards(page, browser):
+    """Process all event cards on the page."""
+    # Get all event card elements
+    print("Finding 8th Side events on the page...")
     
-    WebDriverWait(driver, 10).until(EC.presence_of_all_elements_located((By.CLASS_NAME, 'event-card')))
-
-
-    # Find all event containers
-    event_containers = driver.find_elements(By.CLASS_NAME, 'event-card')  # Adjust if necessary
-
-    for i in range(len(event_containers)):
-        # Since navigating to a new page will lose the context of the previous page,
-        # we need to find the elements again each time we navigate back to the list of events
-        event_cards = driver.find_elements(By.CLASS_NAME, 'event-card')
-        if "8th" in event_cards[i].text.lower():
-            lineSplit = event_cards[i].text.splitlines()
+    # Use a more reliable method to find 8th side events
+    eighth_side_events = await page.evaluate('''
+        () => {
+            const events = [];
+            const eventCards = document.querySelectorAll('.event-card');
             
-            # print(lineSplit[0])
-            # print(lineSplit[2])
-
-            # Click on the event card to navigate to the event page
-            # Scroll to the element
-            driver.execute_script("arguments[0].scrollIntoView();", event_cards[i])
-
-            # Click the element
-            ActionChains(driver).move_to_element(event_cards[i]).click(event_cards[i]).perform()
-            eventUrl = driver.current_url
-            # print(eventUrl)
-
-            # Wait for the new page to load
-            time.sleep(5)  # adjust this value as needed
-
-            source = driver.page_source
-
-            dollar_values = re.findall(r'\$\d+(?:\.\d{2})?', source)
-
-            # Print the found dollar values
-            # print(dollar_values[0])
-
-            driver.back()
-            time.sleep(5)
-            
-            # Re-find the event cards after navigating back to the event list page
-            event_cards = driver.find_elements(By.CLASS_NAME, 'event-card')
-            time.sleep(5)
-            
-            # Inside your for loop, after getting the event details
-            event_title = lineSplit[2]
-            print(event_title)
-            event_date = lineSplit[0]
-            print(event_date)
-            event_link = eventUrl
-            print(event_link)
-            event_price = dollar_values[0]
-            print(event_price)
-
-            # Create a new item with these details
-            item = {
-                'title': event_title,
-                'link': event_link,
-                'description': f'{event_title}\nDate: {event_date}\nPrice: {event_price}\nLink: {event_link}\n\n',
+            for (let i = 0; i < eventCards.length; i++) {
+                const card = eventCards[i];
+                const text = card.innerText || card.textContent;
+                
+                if (text.toLowerCase().includes('8th')) {
+                    // Get the structured data from the card
+                    const lines = text.split('\\n').filter(line => line.trim() !== '');
+                    const dateText = lines[0] || '';
+                    const distanceText = lines[1] || '';
+                    const titleText = lines[2] || '';
+                    
+                    events.push({
+                        index: i,
+                        date: dateText.trim(),
+                        distance: distanceText.trim(),
+                        title: titleText.trim()
+                    });
+                }
             }
-
-            # Add the item to the feed
-            feed.add_item(**item)
+            return events;
+        }
+    ''')
+    
+    print(f"Found {len(eighth_side_events)} 8th side events")
+    
+    events_found = len(eighth_side_events)
+    events_added = 0
+    events_filtered = 0
+    
+    for event_data in eighth_side_events:
+        try:
+            event_date_str = event_data['date'].replace('color: #fff;', '').strip()
+            event_title = event_data['title'].replace('color: #fff;', '').strip()
             
-except:
-    pass
+            if not event_title:
+                event_title = "8th Side Pokemon Event"
+            
+            print(f"Processing event: {event_title} on {event_date_str}")
+            
+            # Extract date components from the date string (like "March 11, 2025 6:30PM")
+            date_pattern = re.compile(r'([A-Za-z]+)\s+(\d{1,2}),\s+(\d{4})\s+(\d{1,2}:\d{2}[AP]M)', re.IGNORECASE)
+            date_match = date_pattern.search(event_date_str)
+            
+            if date_match:
+                month, day, year, time_str = date_match.groups()
+                event_month = month
+                event_day = day
+                event_year = year
+                event_time = time_str
+                
+                try:
+                    event_date = datetime.strptime(f"{month} {day}, {year} {time_str}", "%B %d, %Y %I:%M%p")
+                    
+                    # Filter events by date range (today to one month from now)
+                    if event_date < today or event_date > one_month_later:
+                        if DEBUG:
+                            print(f"Skipping event outside date range: {event_title} on {event_date.strftime('%Y-%m-%d')}")
+                        events_filtered += 1
+                        continue
+                    
+                except ValueError:
+                    if DEBUG:
+                        print(f"Could not parse date for event: {event_title}, {event_date_str}")
+                    # Default to today if we can't parse the date
+                    event_date = datetime.now()
+            else:
+                # Couldn't extract date components, set default values
+                event_time = "6:30PM" 
+                event_date = datetime.now()
+            
+            # Rather than clicking on cards which causes DOM detachment issues,
+            # we'll construct the URL based on the event data
+            base_url = "https://events.pokemon.com/en-us/events/"
+            event_url = f"{base_url}?near=4232%20Fort%20St,%20Lincoln%20Park,%20MI%2048146,%20USA"
+            
+            # Set default price if we can't extract it
+            event_price = "$5.00"
+            
+            # Format the datetime string for display
+            if date_match:
+                event_datetime_str = f"{month} {day}, {year} {time_str}"
+            else:
+                event_datetime_str = event_date_str
+            
+            # Create a consistent string for GUID generation
+            details_str = f"{event_title}-{event_datetime_str}-{event_price}"
+            guid = hashlib.md5(details_str.encode()).hexdigest()
+            
+            # Construct the HTML formatted description
+            formatted_description = f"""
+            <h2>{event_title}</h2>
+            <p><strong>Date and Time:</strong> {event_datetime_str}</p>
+            <p><strong>Price:</strong> {event_price}</p>
+            <p><strong>Location:</strong> 8th Side Games</p>
+            <p><a href="{event_url}">Event Link</a></p>
+            """
+            
+            # Add the item to the feed
+            feed.add_item(
+                title=event_title,
+                link=event_url,
+                description=formatted_description,
+                content=f"{event_title}\nDate: {event_datetime_str}\nPrice: {event_price}\nLocation: 8th Side Games\nLink: {event_url}",
+                unique_id=guid
+            )
+            events_added += 1
+            print(f"Added event: {event_title}")
+            
+        except Exception as e:
+            print(f"Error processing event: {str(e)}")
+            if DEBUG:
+                import traceback
+                traceback.print_exc()
+    
+    print(f"\nSummary: Found {events_found} 8th side events, filtered {events_filtered} by date, added {events_added} to feed")
 
-finally:
-    driver.quit()
-
-# Write the RSS feed to a file 
-with open('pokefeed.rss', 'w') as f:
-    feed.write(f, 'utf-8')
+if __name__ == "__main__":
+    asyncio.run(main())

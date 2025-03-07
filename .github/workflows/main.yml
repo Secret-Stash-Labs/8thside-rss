@@ -28,24 +28,25 @@ jobs:
       - name: Install xvfb
         run: sudo apt-get install xvfb
 
-      - name: Remove old feed.rss file
-        run: rm -f feed.rss
-      
-      - name: Remove old poke feed.rss file
-        run: rm -f pokemon/feed.rss
+      - name: Remove old feed files
+        run: |
+          rm -f feed.rss
+          rm -f pokemon/feed.rss
+          mkdir -p pokemon
 
-      - name: Running the Python script with Playwright
+      - name: Running the main Python script with Playwright
         run: python feedgen-playwright.py
 
-      - name: Running the Pokemon Python script
+      - name: Running the Pokemon Python script with Playwright
         run: python pokemon/poke-feedgen.py
         
       - name: Commit Changes
         run: |
           git config --global user.name 'Dev7117'
           git config --global user.email 'Dev7117@users.noreply.github.com'
-          git add .
-          git commit -am "Automated Commit"
+          git add feed.rss pokemon/feed.rss
+          git commit -m "Automated RSS Feed Update"
+          git push || echo "No changes to commit"
 
       - name: Push changes
         uses: ad-m/github-push-action@master
