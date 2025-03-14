@@ -3,7 +3,7 @@ name: Update Pages
 
 on:
   workflow_run:
-    workflows: ["Run Selenium On GitHub Action"]
+    workflows: ["Run Playwright On GitHub Action"]
     types:
       - completed
 
